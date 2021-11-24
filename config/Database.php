@@ -2,10 +2,10 @@
 
 class Database
 {
-    private $host = 'localhost';
-    private $db_name = 'myblog';
+    private $host = '127.0.0.1';
+    private $db_name = 'library';
     private $username = 'root';
-    private $password = '123456';
+    private $password = '';
     private $conn;
 
     public function connect() {
