@@ -29,8 +29,10 @@ if($_SERVER["REQUEST_METHOD"] != "POST"):
 // CHECKING EMPTY FIELDS
 elseif(!isset($data->firstName) 
     || !isset($data->email) 
+    || !isset($data->secondName) 
     || !isset($data->password)
     || empty(trim($data->firstName))
+    || empty(trim($data->secondName))
     || empty(trim($data->email))
     || empty(trim($data->password))
     ):
@@ -40,7 +42,7 @@ elseif(!isset($data->firstName)
 
 // IF THERE ARE NO EMPTY FIELDS THEN-
 else:
-    
+    $secondName = trim($data->secondName);
     $firstName = trim($data->firstName);
     $email = trim($data->email);
     $password = trim($data->password);
@@ -66,12 +68,13 @@ else:
                 $returnData = msg(0,422, 'This E-mail already in use!');
             
             else:
-                $insert_query = "INSERT INTO `users`(`firstName`,`email`,`password`) VALUES(:name,:email,:password)";
+                $insert_query = "INSERT INTO `users`(`firstName`,`secondName`,`email`,`password`) VALUES(:name,:secondName,:email,:password)";
 
                 $insert_stmt = $conn->prepare($insert_query);
 
                 // DATA BINDING
                 $insert_stmt->bindValue(':name', htmlspecialchars(strip_tags($firstName)),PDO::PARAM_STR);
+                $insert_stmt->bindValue(':secondName', htmlspecialchars(strip_tags($secondName)),PDO::PARAM_STR);
                 $insert_stmt->bindValue(':email', $email,PDO::PARAM_STR);
                 $insert_stmt->bindValue(':password', password_hash($password, PASSWORD_DEFAULT),PDO::PARAM_STR);
 
