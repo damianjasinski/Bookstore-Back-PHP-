@@ -26,6 +26,7 @@ const Footer = () => {
       }
     });
   };
+  
 
   if (success) {
     return <Navigate to={"/"} />;
