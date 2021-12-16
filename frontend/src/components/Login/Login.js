@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { PostData } from "../../services/PostData";
-
+import BookIco from "@mui/icons-material/LocalLibraryOutlined";
 import { Navigate } from "react-router-dom";
 
 const Login = () => {
@@ -37,32 +37,44 @@ const Login = () => {
   }
 
   return (
-    <div>
-      <div className="row ">
-        <div className="medium-4 columns">
-          <label>Username</label>
-          <input
-            type="text"
-            name="email"
-            placeholder="email"
-            value={inputs.email || ""}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="password"
-            placeholder="password"
-            value={inputs.password || ""}
-            onChange={handleChange}
-          />
-          <input
-            type="submit"
-            value="Login"
-            className="button"
+    <div class="container mx-auto">
+      <div className="row position-absolute top-50 start-50 translate-middle">
+        <div className="border rounded  text-center bg-light">
+          <BookIco className="mt-5" fontSize="large" />
+
+          <div className="row mx-3 mt-4 ">
+            <h6 for="exampleInputEmail1">Enter Email address</h6>
+            <input
+              type="email"
+              name = "email"
+              className="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+              placeholder="Enter email"
+              onChange={handleChange}
+            />
+
+          </div>
+          <div className="row mx-3 mt-4 ">
+            <h6 for="exampleInputEmail1">Enter password </h6>
+            <input
+              type="password"
+              name = "password"
+              className="form-control"
+              id="exampleInputEmail1"
+              placeholder="Enter email"
+              onChange={handleChange}
+            />
+          </div>
+
+          <a
+            type="button"
             onClick={login}
-          />
+            className="mx-1 mt-4 fs-5 mb-4 p-2 btn btn-primary"
+          >
+            Login
+          </a>
         </div>
-        <div className="medium-8 columns"></div>
       </div>
     </div>
   );

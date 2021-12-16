@@ -28,7 +28,7 @@ const Home = () => {
   };
 
   if (!sessionStorage.getItem("token")) {
-    return <Navigate to={"/Welcome"} />;
+    return <Navigate to={"/"} />;
   }
 
   return (

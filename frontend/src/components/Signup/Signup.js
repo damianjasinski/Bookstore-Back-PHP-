@@ -2,6 +2,8 @@ import React from "react";
 import { useState } from "react";
 import { Navigate } from "react-router";
 import { PostData } from "../../services/PostData";
+import BookIco from "@mui/icons-material/LocalLibraryOutlined";
+
 const Footer = () => {
   //inputs should be passed to PostData (fetch)
   const [inputs, setInputs] = useState({});
@@ -37,45 +39,62 @@ const Footer = () => {
   }
 
   return (
-    <div>
-      <div className="row">
-        <div className="medium-6 columns">
-          <input
-            type="text"
-            name="firstName"
-            placeholder="firstName"
-            value={inputs.firstName || ""}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="secondName"
-            placeholder="secondName"
-            value={inputs.secondName || ""}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="email"
-            placeholder="email"
-            value={inputs.email || ""}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="password"
-            placeholder="password"
-            value={inputs.password || ""}
-            onChange={handleChange}
-          />
-          <input
-            type="submit"
-            value="Signup"
-            className="button"
+    <div class="container mx-auto">
+      <div className="row position-absolute top-50 start-50 translate-middle">
+        <div className="border rounded  text-center bg-light">
+          <BookIco className="mt-5" fontSize="large" />
+
+          <div className="row mx-3 mt-3 ">
+            <h6 >Enter your first name</h6>
+            <input
+              name = "firstName"
+              className="form-control"
+              aria-describedby="emailHelp"
+              placeholder="First name"
+              onChange={handleChange}
+            />
+          </div>
+          <div className="row mx-3 mt-3 ">
+            <h6 >Enter your second name</h6>
+            <input
+              name = "secondName"
+              className="form-control"
+              aria-describedby="emailHelp"
+              placeholder="Second name"
+              onChange={handleChange}
+            />
+          </div>
+          <div className="row mx-3 mt-3 ">
+            <h6 >Enter your email</h6>
+            <input
+              name = "email"
+              className="form-control"
+              type = "email"
+              aria-describedby="emailHelp"
+              placeholder="email"
+              onChange={handleChange}
+            />
+
+          </div>
+          <div className="row mx-3 mt-3 ">
+            <h6 >Enter password </h6>
+            <input
+              type="password"
+              name = "password"
+              className="form-control"
+              placeholder="password"
+              onChange={handleChange}
+            />
+          </div>
+
+          <a
             onClick={signup}
-          />
+            type="button"
+            className="mx-1 mt-4 fs-5 mb-4 p-2 btn btn-primary"
+          >
+            Signup
+          </a>
         </div>
-        <div className="medium-8 columns"></div>
       </div>
     </div>
   );

@@ -2,14 +2,14 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <div>
-      <div className="row">
-        <div className="medium-12 columns">
-          <h3>Contact Me</h3>
-        </div>
-      </div>
+    <div
+      className="container-fluid fixed-bottom text-center w-bold font-monospace rounded"
+    >
+      <p class="text-light fs-6">©2021 Jasiński Damian PŁ</p>
     </div>
   );
 };
 
 export default Footer;
+
+//style={{backgroundColor:'blue'}}
