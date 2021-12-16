@@ -1,31 +1,50 @@
 <?php
-    //Headers
-    header('Acces-Control-Allow-Origin: *');
-    header('COntent-Type: application/json');
+//Headers
+header('Acces-Control-Allow-Origin: *');
+header('COntent-Type: application/json');
 
-    include_once '../../config/Database.php';
-    include_once '../../models/Book.php';
+include_once '../../config/Database.php';
+include_once '../../models/Books.php';
+require __DIR__ . '../../../auth/Auth.php';
+require __DIR__ . '../../../util/msg.php';
 
-    //Instantiate DB & connect to it
-    $database = new Database();
-    $db = $database -> connect();
+
+$returnData = [
+    "success" => 0,
+    "status" => 401,
+    "message" => "Unauthorized"
+];
+//Instantiate DB & connect to it
+$database = new Database();
+$conn = $database->connect();
+
+
+$allHeaders = getallheaders();
+$auth = new Auth($conn, $allHeaders);
+
+// IF REQUEST METHOD IS NOT EQUAL TO POST
+if ($_SERVER["REQUEST_METHOD"] != "GET") {
+    $returnData = msg(0, 404, 'Page Not Found!');
+}
+
+if ($auth->isAuth()) {
 
 
     //Instantiate Book object
-    $book = new Book($db);
+    $book = new Book($conn);
 
     //book query
-    $result = $book -> read();
+    $result = $book->read();
 
     //Get row count
-    $num = $result -> rowCount();
+    $num = $result->rowCount();
 
     //Check if any posts
-    if($num > 0) {
+    if ($num > 0) {
         $books_arr = array();
         $books_arr['data'] = array();
-        
-        while($row = $result -> fetch(PDO::FETCH_ASSOC)) {
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 
             extract($row);
             $book_item = array(
@@ -38,13 +57,13 @@
             //Push to "data"
             array_push($books_arr['data'], $book_item);
         }
+        $returnData = msg(1, 200, 'Success', $books_arr);
 
         //Turn to JSON & output
-        echo json_encode($books_arr);
-
-    } 
-    else {
-        echo json_encode((
-            array('message' => 'No books found')
-        ));
+        // echo json_encode($books_arr);
+    } else {
+        $returnData = msg(1, 200, 'No books found');
     }
+}
+
+echo json_encode($returnData);
