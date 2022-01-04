@@ -9,7 +9,7 @@ class Contact {
     public $id;
     public $userId;
     public $email;
-    public $phone_number;
+    public $phoneNumber;
 
 
     //constructor

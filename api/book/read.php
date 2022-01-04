@@ -54,9 +54,10 @@ if ($auth->isAuth()) {
                 'id' => $id,
                 'name' => $name,
                 'author' => $author,
+                'description' => $description,
                 'category' => $category,
-                'publish_year' => $publish_year,
-                'description' => $description
+                'available' => $available,
+                'publish_year' => $publish_year
             );
             //Push to "data"
             array_push($books_arr['data'], $book_item);

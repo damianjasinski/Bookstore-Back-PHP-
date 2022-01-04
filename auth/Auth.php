@@ -2,12 +2,12 @@
 require __DIR__.'./JwtHandler.php';
 class Auth extends JwtHandler{
 
-    protected $db;
+    protected $conn;
     protected $headers;
     protected $token;
-    public function __construct($db,$headers) {
+    public function __construct($conn,$headers) {
         parent::__construct();
-        $this->db = $db;
+        $this->conn = $conn;
         $this->headers = $headers;
     }
 
@@ -18,8 +18,8 @@ class Auth extends JwtHandler{
                 
                 $data = $this->_jwt_decode_data($this->token[1]);
 
-                if(isset($data['auth']) && isset($data['data']->user_id) && $data['auth']):
-                    $user = $this->fetchUser($data['data']->user_id);
+                if(isset($data['auth']) && isset($data['data']->userId) && $data['auth']):
+                    $user = $this->fetchUser($data['data']->userId);
                     return $user;
 
                 else:
@@ -38,11 +38,11 @@ class Auth extends JwtHandler{
         endif;
     }
 
-    protected function fetchUser($user_id){
+    protected function fetchUser($userId){
         try{
-            $fetch_user_by_id = "SELECT `firstName`,`email` FROM `users` WHERE `id`=:id";
-            $query_stmt = $this->db->prepare($fetch_user_by_id);
-            $query_stmt->bindValue(':id', $user_id,PDO::PARAM_INT);
+            $fetch_user_by_id = "SELECT `userId`, `firstName`,`secondName`, `email`, `phoneNumber`,`role` FROM `users` WHERE `userId`=:userId";
+            $query_stmt = $this->conn->prepare($fetch_user_by_id);
+            $query_stmt->bindValue(':userId', $userId,PDO::PARAM_INT);
             $query_stmt->execute();
 
             if($query_stmt->rowCount()):

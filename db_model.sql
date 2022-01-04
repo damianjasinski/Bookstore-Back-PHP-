@@ -11,7 +11,7 @@ CREATE TABLE `Contacts` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `userId` int,
   `email` varchar(255),
-  `phone_number` varchar(255)
+  `phoneNumber` varchar(255)
 );
 
 CREATE TABLE `Books` (

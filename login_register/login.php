@@ -64,7 +64,7 @@ else:
                     $jwt = new JwtHandler();
                     $token = $jwt->_jwt_encode_data(
                         'http://localhost:80/php-pure',
-                        array("user_id"=> $row['id'])
+                        array("userId"=> $row['userId'])
                     );
                     
                     $returnData = [
