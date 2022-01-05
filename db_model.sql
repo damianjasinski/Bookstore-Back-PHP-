@@ -2,6 +2,8 @@ CREATE TABLE `Users` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `firstName` varchar(255),
   `secondName` varchar(255),
+  `email` varchar(255),
+  `phoneNumber` int,
   `password` varchar(255),
   `role` varchar(255),
   `created_at` datetime
@@ -55,14 +57,19 @@ CREATE TABLE `Order` (
   `userId` int,
   `bookId` int,
   `created_at` datetime,
-  `expiration_date` datetime
+  `expiration_date` datetime,
+  `expired` boolean
 );
 
 CREATE TABLE `Payment` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `orderId` int,
-  `ammount` int
+  `ammount` int,
+  `finalized` boolean
 );
+
+-- events
+-- UPDATE `order` SET expired = true WHERE date(expiration_date) <= CURRENT_TIMESTAMP()
 
 ALTER TABLE `Contacts` ADD FOREIGN KEY (`userId`) REFERENCES `Users` (`id`);
 
