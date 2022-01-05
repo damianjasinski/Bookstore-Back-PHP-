@@ -31,8 +31,8 @@ $data = json_decode(file_get_contents("php://input"));
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
     $returnData = msg(0, 404, 'Page Not Found!');
 }
-
-if ($auth->isAuth()) {
+$user = $auth->isAuth();
+if ($user) {
     $userId = $user["user"]["userId"];
     $user = new User($conn, $userId);
     $user->update($data->firstName, $data->secondName, $data->phoneNumber, $data->email, $data->password);

@@ -25,16 +25,15 @@ $conn = $database->connect();
 $allHeaders = getallheaders();
 $auth = new Auth($conn, $allHeaders);
 
-$user = 0;
 
 // IF REQUEST METHOD IS NOT EQUAL TO POST
 if ($_SERVER["REQUEST_METHOD"] != "GET") {
     $returnData = msg(0, 404, 'Page Not Found!');
 }
 
+$user = $auth->isAuth();
 
-
-if ($auth->isAuth()) {
+if ($user) {
 
     $userId = $user["user"]["userId"];
     $address = new Adress($conn, $userId);
@@ -54,7 +53,7 @@ if ($auth->isAuth()) {
             'buildingNumber' => $address->getBuildingNumber()
         );
         array_push($address_arr['data'], $address_item);
-        $returnData = msg(0, 200, 'Success', $address_arr);
+        $returnData = msg(1, 200, 'Success', $address_arr);
     }
 }
 
