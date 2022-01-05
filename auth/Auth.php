@@ -47,11 +47,11 @@ class Auth extends JwtHandler{
 
             if($query_stmt->rowCount()):
                 $row = $query_stmt->fetch(PDO::FETCH_ASSOC);
-                return [
-                    'success' => 1,
-                    'status' => 200,
-                    'user' => $row
-                ];
+                return array(
+                    "success" => "1",
+                    "status" => "200",
+                    "user" => $row
+                );
             else:
                 return null;
             endif;

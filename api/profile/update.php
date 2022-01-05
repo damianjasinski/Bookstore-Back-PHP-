@@ -33,14 +33,12 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 }
 
 if ($auth->isAuth()) {
-    if (!isset($data->userId)) {
-        $returnData = msg(0, 422, 'Please provide user id');
-    } else {
-        $user = new User($conn, $data->userId);
-        $user->update($data->firstName, $data->secondName, $data->phoneNumber, $data->email, $data->password);
-        $returnData = msg(1, 200, 'Success');
-        $user -> read();
-    }
+    $userId = $user["user"]["userId"];
+    $user = new User($conn, $userId);
+    $user->update($data->firstName, $data->secondName, $data->phoneNumber, $data->email, $data->password);
+    $returnData = msg(1, 200, 'Success');
+    $user->read();
 }
+
 
 echo json_encode($returnData);

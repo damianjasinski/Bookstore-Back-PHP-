@@ -25,20 +25,19 @@ $conn = $database->connect();
 $allHeaders = getallheaders();
 $auth = new Auth($conn, $allHeaders);
 
-// GET DATA FROM REQUEST
-$data = json_decode(file_get_contents("php://input"));
-
+$user = 0;
 
 // IF REQUEST METHOD IS NOT EQUAL TO POST
 if ($_SERVER["REQUEST_METHOD"] != "GET") {
     $returnData = msg(0, 404, 'Page Not Found!');
 }
 
+
+
 if ($auth->isAuth()) {
 
-
-    //Instantiate Book object
-    $address = new Adress($conn, $data->userId);
+    $userId = $user["user"]["userId"];
+    $address = new Adress($conn, $userId);
 
     //query address
     if ($address->read() == false) {
@@ -47,17 +46,17 @@ if ($auth->isAuth()) {
         $address_arr = array();
         $address_arr['data'] = array();
         $address_item = array(
-            'id' => $address -> getId(),
-            'city' => $address -> getCity(),
-            'postCode' => $address -> getPostCode(),
-            'country' => $address -> getCountry(),
-            'street' => $address -> getStreet(),
-            'buildingNumber' => $address -> getBuildingNumber()
+            'id' => $address->getId(),
+            'city' => $address->getCity(),
+            'postCode' => $address->getPostCode(),
+            'country' => $address->getCountry(),
+            'street' => $address->getStreet(),
+            'buildingNumber' => $address->getBuildingNumber()
         );
         array_push($address_arr['data'], $address_item);
         $returnData = msg(0, 200, 'Success', $address_arr);
     }
-
 }
+
 
 echo json_encode($returnData);
