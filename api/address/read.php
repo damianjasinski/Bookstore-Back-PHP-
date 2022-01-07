@@ -37,23 +37,12 @@ if ($user) {
 
     $userId = $user["user"]["userId"];
     $address = new Adress($conn, $userId);
-
+    $result = $address->read();
     //query address
-    if ($address->read() == false) {
+    if ($result == false) {
         $returnData = msg(0, 422, 'Address not found');
     } else {
-        $address_arr = array();
-        $address_arr['data'] = array();
-        $address_item = array(
-            'id' => $address->getId(),
-            'city' => $address->getCity(),
-            'postCode' => $address->getPostCode(),
-            'country' => $address->getCountry(),
-            'street' => $address->getStreet(),
-            'buildingNumber' => $address->getBuildingNumber()
-        );
-        array_push($address_arr['data'], $address_item);
-        $returnData = msg(1, 200, 'Success', $address_arr);
+        $returnData = msg(1, 200, 'Success', $result);
     }
 }
 
