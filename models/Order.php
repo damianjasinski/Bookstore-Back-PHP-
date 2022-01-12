@@ -4,7 +4,7 @@ class Order
 {
     // db
     private $conn;
-    private $table = 'Order';
+    private $table = 'order';
 
     //user
     private $id;
@@ -26,11 +26,10 @@ class Order
 
     public function readAll()
     {
-
         //Create query
-        $fetchOrdersByUserId = "SELECT `id`,`bookId`, `createdAt`, `expirationDate`, `expired`, `finalized` FROM `order` WHERE `userId`=:userId";
+        $fetchOrdersByUserId = "SELECT * FROM `order` JOIN books ON books.id = `order`.bookId AND `order`.userId = ?";
         $stmt = $this->conn->prepare($fetchOrdersByUserId);
-        $stmt->bindValue(':userId', $this->userId, PDO::PARAM_INT);
+        $stmt->bindValue(1, $this->userId, PDO::PARAM_INT);
         //Execute query
         $stmt->execute();
 
@@ -49,7 +48,8 @@ class Order
                     'createdAt' => $createdAt,
                     'expirationDate' => $expirationDate,
                     'expired' => $expired,
-                    'finalized' => $finalized
+                    'finalized' => $finalized,
+                    'name' => $name
                 );
                 array_push($orders_arr['data'], $order_item);
             }
