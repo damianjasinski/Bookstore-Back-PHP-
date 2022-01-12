@@ -24,7 +24,42 @@ class Order
         $this->userId = $userId;
     }
 
-    //get user from db
+    public function readAll()
+    {
+
+        //Create query
+        $fetchOrdersByUserId = "SELECT `id`,`bookId`, `createdAt`, `expirationDate`, `expired`, `finalized` FROM `order` WHERE `userId`=:userId";
+        $stmt = $this->conn->prepare($fetchOrdersByUserId);
+        $stmt->bindValue(':userId', $this->userId, PDO::PARAM_INT);
+        //Execute query
+        $stmt->execute();
+
+        //Get row count
+        $num = $stmt->rowCount();
+
+        if ($num > 0) {
+            $orders_arr = array();
+            $orders_arr['data'] = array();
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
+            {
+                extract($row);
+                $order_item = array(
+                    'id' => $id,
+                    'bookId' => $bookId,
+                    'createdAt' => $createdAt,
+                    'expirationDate' => $expirationDate,
+                    'expired' => $expired,
+                    'finalized' => $finalized
+                );
+                array_push($orders_arr['data'], $order_item);
+            }
+            return $orders_arr;
+        } else
+            return false;
+    }
+
+
+    //get order from db
     public function readSingle()
     {
 
