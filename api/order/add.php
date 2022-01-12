@@ -40,24 +40,37 @@ if ($user) {
     if (!isset($data->bookId)) {
         $returnData = msg(0, 422, 'Need bookId');
     } else {
+        $duplicateFlag = 0;
         $userId = $user["user"]["userId"];
         $order = new Order($conn, $userId);
-        //check if book is available
-        $book = new Book($conn, $userId);
-        $checkIfAvailable = $book->readSingle($data->bookId);
-        if ($checkIfAvailable) {
-            extract($checkIfAvailable);
-            if ($available == 1) {
-                $result = $order->add($userId, $data->bookId);
-                //query address
-                if ($result == false) {
-                    $returnData = msg(0, 422, 'Order failed ');
-                } else {
-                    $returnData = msg(1, 200, 'Success');
-                }
+        //check if user has already active order of chosen book
+        $checkForDuplicateOrder = $order->readSingle();
+        if ($checkForDuplicateOrder) {
+            extract($checkForDuplicateOrder);
+            if ($bookId == $data->bookId) {
+                $returnData = msg(0, 422, 'You have already ordered this book');
+                $duplicateFlag = 1;
             }
         }
-        else $returnData = msg(0, 422, 'Book doesnt exist');
+        if ($duplicateFlag == 0) {
+            //check if book is available
+            $book = new Book($conn, $userId);
+            $checkIfAvailable = $book->readSingle($data->bookId);
+            if ($checkIfAvailable) {
+                extract($checkIfAvailable);
+                if ($available == 1) {
+                    $result = $order->add($userId, $data->bookId);
+                    //query address
+                    if ($result == false) {
+                        $returnData = msg(0, 422, 'Order failed ');
+                    } else {
+                        $returnData = msg(1, 200, 'Success');
+                    }
+                } else {
+                    $returnData = msg(0, 422, 'Book is not available');
+                }
+            } else $returnData = msg(0, 422, 'Book doesnt exist');
+        }
     }
 }
 

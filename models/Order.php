@@ -25,9 +25,9 @@ class Order
     }
 
     //get user from db
-    public function read()
+    public function readSingle()
     {
- 
+
         //Create query
         $fetchOrdersByUserId = "SELECT `id`,`bookId`, `createdAt`, `expirationDate`, `expired`, `finalized` FROM `order` WHERE `userId`=:userId";
         $stmt = $this->conn->prepare($fetchOrdersByUserId);
@@ -37,56 +37,51 @@ class Order
 
         //Get row count
         $num = $stmt->rowCount();
-        
+
         if ($num > 0) {
-            $orders_arr = array();
-            $orders_arr['data'] = array();
-            while( $row = $stmt -> fetch(PDO::FETCH_ASSOC)) {
-                extract($row);
-                $order_item = array(
-                    'id' => $id,
-                    'bookId' => $bookId,
-                    'createdAt' => $createdAt,
-                    'expirationDate' => $expirationDate,
-                    'expired' => $expired,
-                    'finalized' => $finalized   
-                );
-                array_push($orders_arr['data'], $address_item);
-            }
-            return $orders_arr;
-        }
-        else
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            extract($row);
+            $order_item = array(
+                'id' => $id,
+                'bookId' => $bookId,
+                'createdAt' => $createdAt,
+                'expirationDate' => $expirationDate,
+                'expired' => $expired,
+                'finalized' => $finalized
+            );
+            return $order_item;
+        } else
             return false;
     }
-    
-    public function add($userId, $bookId) 
+
+    public function add($userId, $bookId)
     {
         $addAddressToUserId = "INSERT INTO `order` (`userId`, `bookId`)
                                 VALUES (?, ?)";
-        $stmt = ($this -> conn) -> prepare($addAddressToUserId);
+        $stmt = ($this->conn)->prepare($addAddressToUserId);
         // DATA BINDING
-        $stmt->bindValue(1, htmlspecialchars(strip_tags($this -> userId)), PDO::PARAM_INT);
+        $stmt->bindValue(1, htmlspecialchars(strip_tags($this->userId)), PDO::PARAM_INT);
         $stmt->bindValue(2, htmlspecialchars(strip_tags($bookId)), PDO::PARAM_INT);
-        
-        $stmt -> execute();
+
+        $stmt->execute();
         return true;
     }
 
-    public function update($city, $postCode, $country, $street, $buildingNumber, $id) 
+    public function update($city, $postCode, $country, $street, $buildingNumber, $id)
     {
         $updateAddressForUserId = "UPDATE addresses SET `city` = ?, `postCode` = ?, `country` = ?, `street` = ?, `buildingNumber` = ? 
                                 WHERE `userId` =? and `id` =?";
-        $stmt = ($this -> conn) -> prepare($updateAddressForUserId);
+        $stmt = ($this->conn)->prepare($updateAddressForUserId);
         // DATA BINDING
         $stmt->bindValue(1, htmlspecialchars(strip_tags($city)), PDO::PARAM_STR);
         $stmt->bindValue(2, htmlspecialchars(strip_tags($postCode)), PDO::PARAM_INT);
         $stmt->bindValue(3, htmlspecialchars(strip_tags($country)), PDO::PARAM_STR);
         $stmt->bindValue(4, htmlspecialchars(strip_tags($street)), PDO::PARAM_STR);
         $stmt->bindValue(5, htmlspecialchars(strip_tags($buildingNumber)), PDO::PARAM_STR);
-        $stmt->bindValue(6, htmlspecialchars(strip_tags($this -> userId)), PDO::PARAM_INT);
+        $stmt->bindValue(6, htmlspecialchars(strip_tags($this->userId)), PDO::PARAM_INT);
         $stmt->bindValue(7, htmlspecialchars(strip_tags($id)), PDO::PARAM_INT);
-        $stmt -> execute();
-        return true; 
+        $stmt->execute();
+        return true;
     }
 
     /**
