@@ -37,25 +37,27 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 $user = $auth->isAuth();
 
 if ($user) {
-    if (!isset($data->bookId))
-    {
+    if (!isset($data->bookId)) {
         $returnData = msg(0, 422, 'Need bookId');
     } else {
         $userId = $user["user"]["userId"];
         $order = new Order($conn, $userId);
         //check if book is available
         $book = new Book($conn, $userId);
-        $checkIfAvailable = $book -> readSingle($data -> bookId);
-        extract($checkIfAvailable);
-        if($available == 1) {
-            $result = $order->add($userId, $data -> bookId);
-            //query address
-            if ($result == false) {
-                $returnData = msg(0, 422, 'Order failed ');
-            } else {
-                $returnData = msg(1, 200, 'Success');
+        $checkIfAvailable = $book->readSingle($data->bookId);
+        if ($checkIfAvailable) {
+            extract($checkIfAvailable);
+            if ($available == 1) {
+                $result = $order->add($userId, $data->bookId);
+                //query address
+                if ($result == false) {
+                    $returnData = msg(0, 422, 'Order failed ');
+                } else {
+                    $returnData = msg(1, 200, 'Success');
+                }
             }
         }
+        else $returnData = msg(0, 422, 'Book doesnt exist');
     }
 }
 
