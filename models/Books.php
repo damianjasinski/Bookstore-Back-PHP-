@@ -14,13 +14,13 @@ class Book
         $this->userId = $userId;
     }
 
-    //get book
-    public function read()
+    //get books
+    public function readAll()
     {
 
         //Create query
         $fetchBooks= '
-        SELECT b.id, b.name, b.author, b.publish_year, b.description, b.available, c.name as category
+        SELECT b.id, b.name, b.author, b.publishYear, b.description, b.available, c.name as category
         FROM ' . $this -> table . ' as b 
         LEFT JOIN Categories as c ON b.categoryId = c.id
         ORDER BY b.name
@@ -44,11 +44,40 @@ class Book
                     'description' => $description,
                     'category' => $category,
                     'available' => $available,
-                    'publish_year' => $publish_year
+                    'publishYear' => $publishYear
                 );
                 array_push($books_arr['data'], $book_item);
             }
             return $books_arr;
+        } else
+            return false;
+    }
+
+    public function readSingle($bookId)
+    {
+
+        //Create query
+        $fetchBookByBookId = "SELECT `name`, `author`, `description`, `categoryId`,`available`,`publishYear` FROM `books` WHERE `id`= ?";
+        $stmt = $this->conn->prepare($fetchBookByBookId);
+        $stmt->bindValue(1, htmlspecialchars(strip_tags($bookId)), PDO::PARAM_INT);
+        //Execute query
+        $stmt->execute();
+
+        //Get row count
+        $num = $stmt->rowCount();
+
+        if ($num > 0) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            extract($row);
+            $book_item = array(
+                'name' => $name,
+                'author' => $author,
+                'description' => $description,
+                'categoryId' => $categoryId,
+                'available' => $available,
+                'publishYear' => $publishYear
+            );
+            return $book_item;
         } else
             return false;
     }

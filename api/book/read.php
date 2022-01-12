@@ -30,44 +30,21 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") {
     $returnData = msg(0, 404, 'Page Not Found!');
 }
 
-if ($auth->isAuth()) {
+$user = $auth->isAuth();
 
+if ($user) {
 
+    $userId = $user["user"]["userId"];
     //Instantiate Book object
-    $book = new Book($conn);
+    $book = new Book($conn, $userId);
 
     //book query
-    $result = $book->read();
-
-    //Get row count
-    $num = $result->rowCount();
-
-    //Check if any posts
-    if ($num > 0) {
-        $books_arr = array();
-        $books_arr['data'] = array();
-
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-
-            extract($row);
-            $book_item = array(
-                'id' => $id,
-                'name' => $name,
-                'author' => $author,
-                'description' => $description,
-                'category' => $category,
-                'available' => $available,
-                'publish_year' => $publish_year
-            );
-            //Push to "data"
-            array_push($books_arr['data'], $book_item);
-        }
-        $returnData = msg(1, 200, 'Success', $books_arr);
-
-        //Turn to JSON & output
-        // echo json_encode($books_arr);
-    } else {
-        $returnData = msg(1, 200, 'No books found');
+    $result = $book->readAll();
+    if($result == false) {
+        $returnData = msg(0, 422, 'Address not found', array());
+    }
+    else {
+        $returnData = msg(1, 200, 'Success', $result);
     }
 }
 
