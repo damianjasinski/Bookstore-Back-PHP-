@@ -36,11 +36,11 @@ $user = $auth->isAuth();
 if ($user) {
 
     $userId = $user["user"]["userId"];
-    $address = new Adress($conn, $userId);
+    $address = new Address($conn, $userId);
     $result = $address->read();
     //query address
     if ($result == false) {
-        $returnData = msg(0, 422, 'Address not found');
+        $returnData = msg(0, 422, 'Address not found', array());
     } else {
         $returnData = msg(1, 200, 'Success', $result);
     }

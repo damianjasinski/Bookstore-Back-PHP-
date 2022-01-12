@@ -69,7 +69,8 @@ else :
                 $returnData = msg(0, 422, 'This E-mail already in use!');
 
             else :
-                $insert_query = "INSERT INTO `users`(`firstName`,`secondName`,`email`,`password`, `created_at`, `role`) VALUES(:name,:secondName,:email,:password,:created_at, :role)";
+                $insert_query = "INSERT INTO `users`(`firstName`,`secondName`,`email`,`password`, `created_at`, `role`)
+                                 VALUES(:name,:secondName,:email,:password,:created_at, :role)";
 
                 $insert_stmt = $conn->prepare($insert_query);
 
@@ -80,7 +81,6 @@ else :
                 $insert_stmt->bindValue(':password', password_hash($password, PASSWORD_BCRYPT), PDO::PARAM_STR);
                 $insert_stmt->bindValue(':created_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
                 $insert_stmt->bindValue(':role', htmlspecialchars(strip_tags("user")), PDO::PARAM_STR);
-
                 $insert_stmt->execute();
 
                 $returnData = msg(1, 201, 'You have successfully registered.');

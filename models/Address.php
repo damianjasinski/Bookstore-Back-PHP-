@@ -1,6 +1,6 @@
 <?php
 
-class Adress
+class Address
 {
     // db
     private $conn;
@@ -48,7 +48,6 @@ class Adress
                     'city' => $city,
                     'postCode' => $postCode,
                     'country' => $country,
-                    'country' => $country,
                     'street' => $street,
                     'buildingNumber' => $buildingNumber   
                 );
@@ -58,6 +57,39 @@ class Adress
         }
         else
             return false;
+    }
+    
+    public function add($city, $postCode, $country, $street, $buildingNumber) 
+    {
+        $addAddressToUserId = "INSERT INTO `addresses` (`city`, `userId`, `postCode`, `country`, `street`, `buildingNumber`)
+                                VALUES (:city, :userId, :postCode, :country, :street, :buildingNumber)";
+        $stmt = ($this -> conn) -> prepare($addAddressToUserId);
+        // DATA BINDING
+        $stmt->bindValue(":city", htmlspecialchars(strip_tags($city)), PDO::PARAM_STR);
+        $stmt->bindValue(":userId", htmlspecialchars(strip_tags($this -> userId)), PDO::PARAM_INT);
+        $stmt->bindValue(":postCode", htmlspecialchars(strip_tags($postCode)), PDO::PARAM_INT);
+        $stmt->bindValue(":country", htmlspecialchars(strip_tags($country)), PDO::PARAM_STR);
+        $stmt->bindValue(":street", htmlspecialchars(strip_tags($street)), PDO::PARAM_STR);
+        $stmt->bindValue(":buildingNumber", htmlspecialchars(strip_tags($buildingNumber)), PDO::PARAM_STR);
+        $stmt -> execute();
+        return true;
+    }
+
+    public function update($city, $postCode, $country, $street, $buildingNumber, $id) 
+    {
+        $updateAddressForUserId = "UPDATE addresses SET `city` = ?, `postCode` = ?, `country` = ?, `street` = ?, `buildingNumber` = ? 
+                                WHERE `userId` =? and `id` =?";
+        $stmt = ($this -> conn) -> prepare($updateAddressForUserId);
+        // DATA BINDING
+        $stmt->bindValue(1, htmlspecialchars(strip_tags($city)), PDO::PARAM_STR);
+        $stmt->bindValue(2, htmlspecialchars(strip_tags($postCode)), PDO::PARAM_INT);
+        $stmt->bindValue(3, htmlspecialchars(strip_tags($country)), PDO::PARAM_STR);
+        $stmt->bindValue(4, htmlspecialchars(strip_tags($street)), PDO::PARAM_STR);
+        $stmt->bindValue(5, htmlspecialchars(strip_tags($buildingNumber)), PDO::PARAM_STR);
+        $stmt->bindValue(6, htmlspecialchars(strip_tags($this -> userId)), PDO::PARAM_INT);
+        $stmt->bindValue(7, htmlspecialchars(strip_tags($id)), PDO::PARAM_INT);
+        $stmt -> execute();
+        return true; 
     }
 
     /**
