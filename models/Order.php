@@ -27,7 +27,7 @@ class Order
     public function readAll()
     {
         //Create query
-        $fetchOrdersByUserId = "SELECT * FROM `order` JOIN books ON books.id = `order`.bookId AND `order`.userId = ?";
+        $fetchOrdersByUserId = "SELECT * FROM `order` JOIN books ON books.id = `order`.bookId AND `order`.userId = ? ORDER BY `order`.createdAt DESC;";
         $stmt = $this->conn->prepare($fetchOrdersByUserId);
         $stmt->bindValue(1, $this->userId, PDO::PARAM_INT);
         //Execute query
