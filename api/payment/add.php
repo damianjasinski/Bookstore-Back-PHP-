@@ -41,10 +41,15 @@ if ($user) {
     } else {
         $userId = $user["user"]["userId"];
         $payment = new Payment($conn, $userId);
-        $result = $payment -> add($data -> orderId, $data -> ammount, $data -> addressId);
-        $returnData = msg(1, 200, 'Success');
+        $result = $payment->add($data->orderId, $data->ammount, $data->addressId);
+        if ($result == false) {
+            $returnData = msg(0, 422, 'Add failed ');
+        } else {
+            $returnData = msg(1, 200, 'Success');
+        }
     }
 }
+
 
 
 echo json_encode($returnData);

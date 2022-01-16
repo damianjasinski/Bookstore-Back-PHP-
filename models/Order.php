@@ -27,7 +27,7 @@ class Order
     public function readAll()
     {
         //Create query
-        $fetchOrdersByUserId = "SELECT * FROM `order` JOIN books ON books.id = `order`.bookId AND `order`.userId = ? ORDER BY `order`.createdAt DESC;";
+        $fetchOrdersByUserId = "SELECT * FROM `order` JOIN books ON books.id = `order`.bookId WHERE `order`.userId = ? ORDER BY `order`.finalized ASC";
         $stmt = $this->conn->prepare($fetchOrdersByUserId);
         $stmt->bindValue(1, $this->userId, PDO::PARAM_INT);
         //Execute query
@@ -43,7 +43,8 @@ class Order
             {
                 extract($row);
                 $order_item = array(
-                    'id' => $id,
+                    'orderId' => $orderId,
+                    'userId' => $userId,
                     'bookId' => $bookId,
                     'createdAt' => $createdAt,
                     'expirationDate' => $expirationDate,
@@ -64,7 +65,7 @@ class Order
     {
 
         //Create query
-        $fetchOrdersByUserId = "SELECT `id`,`bookId`, `createdAt`, `expirationDate`, `expired`, `finalized` FROM `order` WHERE `userId`=:userId";
+        $fetchOrdersByUserId = "SELECT `orderId`,`bookId`, `createdAt`, `expirationDate`, `expired`, `finalized` FROM `order` WHERE `userId`=:userId";
         $stmt = $this->conn->prepare($fetchOrdersByUserId);
         $stmt->bindValue(':userId', $this->userId, PDO::PARAM_INT);
         //Execute query
@@ -77,7 +78,7 @@ class Order
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             extract($row);
             $order_item = array(
-                'id' => $id,
+                'orderId' => $orderId,
                 'bookId' => $bookId,
                 'createdAt' => $createdAt,
                 'expirationDate' => $expirationDate,
@@ -97,7 +98,6 @@ class Order
         // DATA BINDING
         $stmt->bindValue(1, htmlspecialchars(strip_tags($this->userId)), PDO::PARAM_INT);
         $stmt->bindValue(2, htmlspecialchars(strip_tags($bookId)), PDO::PARAM_INT);
-
         $stmt->execute();
         return true;
     }
@@ -105,7 +105,7 @@ class Order
     public function update($city, $postCode, $country, $street, $buildingNumber, $id)
     {
         $updateAddressForUserId = "UPDATE addresses SET `city` = ?, `postCode` = ?, `country` = ?, `street` = ?, `buildingNumber` = ? 
-                                WHERE `userId` =? and `id` =?";
+                                WHERE `userId` =? and `orderId` =?";
         $stmt = ($this->conn)->prepare($updateAddressForUserId);
         // DATA BINDING
         $stmt->bindValue(1, htmlspecialchars(strip_tags($city)), PDO::PARAM_STR);

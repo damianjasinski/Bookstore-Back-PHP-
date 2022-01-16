@@ -36,8 +36,8 @@ $user = $auth->isAuth();
 if ($user) {
 
     $userId = $user["user"]["userId"];
-    $address = new Order($conn, $userId);
-    $result = $address->readAll();
+    $order = new Order($conn, $userId);
+    $result = $order->readAll();
     //query address
     if ($result == false) {
         $returnData = msg(0, 422, 'No orders found', array());

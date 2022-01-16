@@ -59,7 +59,7 @@ if ($user) {
             if ($checkIfAvailable) {
                 extract($checkIfAvailable);
                 if ($available == 1) {
-                    $result = $order->add($userId, $data->bookId);
+                    $result = $order->add($data->bookId);
                     //query address
                     if ($result == false) {
                         $returnData = msg(0, 422, 'Order failed ');
