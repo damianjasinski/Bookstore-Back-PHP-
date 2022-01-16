@@ -89,7 +89,7 @@ class Order
             return false;
     }
 
-    public function add($userId, $bookId)
+    public function add($bookId)
     {
         $addAddressToUserId = "INSERT INTO `order` (`userId`, `bookId`)
                                 VALUES (?, ?)";

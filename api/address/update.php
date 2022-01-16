@@ -37,7 +37,7 @@ $user = $auth->isAuth();
 
 if ($user) {
     if (
-        !isset($data->city) || !isset($data->postCode) || !isset($data->country) || !isset($data->street) || !isset($data->buildingNumber)
+        !isset($data->city) || !isset($data->postCode) || !isset($data->country) || !isset($data->street) || !isset($data->buildingNumber) || !isset($data -> apartment)
         || empty(trim($data->city))
         || empty(trim($data->street))
         || empty(trim($data->buildingNumber))
@@ -46,7 +46,7 @@ if ($user) {
     } else {
         $userId = $user["user"]["userId"];
         $address = new Address($conn, $userId);
-        $result = $address->update($data->city, $data->postCode, $data->country, $data->street, $data->buildingNumber, $data -> id);
+        $result = $address->update($data->city, $data->postCode, $data->country, $data->street, $data->buildingNumber, $data -> id, $data -> apartment);
         //query address
         if ($result == false) {
             $returnData = msg(0, 422, 'Add failed ');

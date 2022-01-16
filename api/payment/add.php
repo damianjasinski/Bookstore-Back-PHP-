@@ -7,7 +7,7 @@ header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 include_once '../../config/Database.php';
-include_once '../../models/Address.php';
+include_once '../../models/Payment.php';
 require __DIR__ . '../../../auth/Auth.php';
 require __DIR__ . '../../../util/msg.php';
 
@@ -36,23 +36,13 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 $user = $auth->isAuth();
 
 if ($user) {
-    if (
-        !isset($data->city) || !isset($data->postCode) || !isset($data->country) || !isset($data->street) || !isset($data->buildingNumber) || !isset($data -> apartment)
-        || empty(trim($data->city))
-        || empty(trim($data->street))
-        || empty(trim($data->buildingNumber))
-    ) {
-        $returnData = msg(0, 422, 'Please fill in all required fields');
+    if (!isset($data->orderId) || !isset($data->ammount) || !isset($data->addressId)) {
+        $returnData = msg(0, 422, 'Not Enough data');
     } else {
         $userId = $user["user"]["userId"];
-        $address = new Address($conn, $userId);
-        $result = $address->add($data -> city, $data -> postCode, $data -> country, $data -> street, $data -> buildingNumber, $data -> apartment);
-        //query address
-        if ($result == false) {
-            $returnData = msg(0, 422, 'Add failed ');
-        } else {
-            $returnData = msg(1, 200, 'Success');
-        }
+        $payment = new Payment($conn, $userId);
+        $result = $payment -> add($data -> orderId, $data -> ammount, $data -> addressId);
+        $returnData = msg(1, 200, 'Success');
     }
 }
 
