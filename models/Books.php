@@ -129,9 +129,9 @@ class Book
         $stmt->bindValue(3, htmlspecialchars(strip_tags($author)), PDO::PARAM_STR);
         $stmt->bindValue(4, htmlspecialchars(strip_tags($categoryId)), PDO::PARAM_INT);
         $stmt->bindValue(5, htmlspecialchars(strip_tags($publishYear)), PDO::PARAM_INT);
-
         //Execute query
         $stmt->execute();
+
         return true;
     }
 

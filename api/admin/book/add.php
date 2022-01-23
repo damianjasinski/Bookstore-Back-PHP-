@@ -43,19 +43,21 @@ else if (
     $returnData = msg(0, 422, 'Please Fill in all Required Fields!');
 }
 
-
-$user = $auth->isAuth();
-
-if (strcmp($user['user']['role'], 'admin') == 0) {
-    $userId = $user["user"]["userId"];
-    $book = new Book($conn, $userId);
-    $result = $book->add($data->name, $data -> description, $data -> author, $data -> categoryId, $data -> publishYear);
-    if ($result == false) {
-        $returnData = msg(0, 422, 'Add failed');
-    } else {
-        $returnData = msg(1, 200, 'Success');
+else {
+    $user = $auth->isAuth();
+    
+    if (strcmp($user['user']['role'], 'admin') == 0) {
+        $userId = $user["user"]["userId"];
+        $book = new Book($conn, $userId);
+        $result = $book->add($data->name, $data -> description, $data -> author, $data -> categoryId, $data -> publishYear);
+        if ($result == false) {
+            $returnData = msg(0, 422, 'Add failed');
+        } else {
+            $returnData = msg(1, 200, 'Success');
+        }
     }
 }
+
 
 
 
