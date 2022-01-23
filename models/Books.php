@@ -134,4 +134,15 @@ class Book
         $stmt->execute();
         return true;
     }
+
+    public function delete($bookId)
+    {
+        //Create query
+        $addBookQuery = "DELETE FROM `books` WHERE `id` = ?";
+        $stmt = $this->conn->prepare($addBookQuery);
+        $stmt->bindValue(1, htmlspecialchars(strip_tags($bookId)), PDO::PARAM_INT);
+        //Execute query
+        $stmt->execute();
+        return true;
+    }
 }
