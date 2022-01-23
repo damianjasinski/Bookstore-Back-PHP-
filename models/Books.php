@@ -116,4 +116,22 @@ class Book
         } else
             return false;
     }
+
+    public function add($name, $description, $author, $categoryId, $publishYear)
+    {
+
+        //Create query
+        $addBookQuery = "INSERT INTO `books`(`name`,`description`,`author`,`categoryId`, `publishYear`)
+                                 VALUES(?, ?, ?, ?, ?)";
+        $stmt = $this->conn->prepare($addBookQuery);
+        $stmt->bindValue(1, htmlspecialchars(strip_tags($name)), PDO::PARAM_STR);
+        $stmt->bindValue(2, htmlspecialchars(strip_tags($description)), PDO::PARAM_STR);
+        $stmt->bindValue(3, htmlspecialchars(strip_tags($author)), PDO::PARAM_STR);
+        $stmt->bindValue(4, htmlspecialchars(strip_tags($categoryId)), PDO::PARAM_INT);
+        $stmt->bindValue(5, htmlspecialchars(strip_tags($publishYear)), PDO::PARAM_INT);
+
+        //Execute query
+        $stmt->execute();
+        return true;
+    }
 }
