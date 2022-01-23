@@ -142,7 +142,12 @@ class Book
         $stmt = $this->conn->prepare($addBookQuery);
         $stmt->bindValue(1, htmlspecialchars(strip_tags($bookId)), PDO::PARAM_INT);
         //Execute query
-        $stmt->execute();
+        try {
+            $stmt->execute();
+        }
+        catch(Exception $e) {
+           return array("You cannot delete this book due to integrity constraint");     
+        }
         return true;
     }
 }

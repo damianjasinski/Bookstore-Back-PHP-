@@ -46,8 +46,8 @@ if (strcmp($user['user']['role'], 'admin') == 0) {
     $userId = $user["user"]["userId"];
     $book = new Book($conn, $userId);
     $result = $book->delete($data->bookId);
-    if ($result == false) {
-        $returnData = msg(0, 422, 'Delete failed');
+    if ($result !== true) {
+        $returnData = msg(0, 422, 'Delete failed', $result);
     } else {
         $returnData = msg(1, 200, 'Success');
     }
