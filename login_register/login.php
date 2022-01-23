@@ -60,7 +60,7 @@ else:
                 // VERIFYING THE PASSWORD (IS CORRECT OR NOT?)
                 // IF PASSWORD IS CORRECT THEN SEND THE LOGIN TOKEN
                 if($check_password):
-
+                    extract($row);
                     $jwt = new JwtHandler();
                     $token = $jwt->_jwt_encode_data(
                         'http://localhost:80/php-pure',
@@ -70,7 +70,8 @@ else:
                     $returnData = [
                         'success' => 1,
                         'message' => 'You have successfully logged in.',
-                        'token' => $token
+                        'token' => $token,
+                        'role' => $role
                     ];
 
                 // IF INVALID PASSWORD
