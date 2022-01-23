@@ -47,7 +47,7 @@ if (strcmp($user['user']['role'], 'admin') == 0) {
     $book = new Book($conn, $userId);
     $result = $book->delete($data->bookId);
     if ($result !== true) {
-        $returnData = msg(0, 422, 'Delete failed', $result);
+        $returnData = msg(0, 422, 'Delete failed', array("data" => "You cannot delete this book due to integrity constraint"));
     } else {
         $returnData = msg(1, 200, 'Success');
     }

@@ -146,7 +146,7 @@ class Book
             $stmt->execute();
         }
         catch(Exception $e) {
-           return array("You cannot delete this book due to integrity constraint");     
+           return false;
         }
         return true;
     }
