@@ -27,8 +27,8 @@ class User
     public function read()
     {
         //Create query
-        $fetch_user_by_id = "SELECT `firstName`,`secondName`, `email`, `phoneNumber`,`role` FROM `users` WHERE `userId`=:userId";
-        $stmt = $this->conn->prepare($fetch_user_by_id);
+        $fetchUserById = "SELECT `firstName`,`secondName`, `email`, `phoneNumber`,`role` FROM `users` WHERE `userId`=:userId";
+        $stmt = $this->conn->prepare($fetchUserById);
         $stmt->bindValue(':userId', $this->userId, PDO::PARAM_INT);
         //Execute query
         $stmt->execute();
@@ -48,6 +48,38 @@ class User
         return false;
     }
 
+    public function readAll()
+    {
+
+        //Create query
+        $fetchAllUsers = "SELECT * FROM `users`";
+        $stmt = $this->conn->prepare($fetchAllUsers);
+        //Execute query
+        $stmt->execute();
+        //Get row count
+        $num = $stmt->rowCount();
+
+        if ($num > 0) {
+            $users_arr = array();
+            $users_arr['data'] = array();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                extract($row);
+                $user_item = array(
+                    'userId' => $userId,
+                    'firstName' => $firstName,
+                    'secondName' => $secondName,
+                    'role' => $role,
+                    'email' => $email,
+                    'phoneNumber' => $phoneNumber,
+                    'createdAt' => $createdAt
+                );
+                array_push($users_arr['data'], $user_item);
+            }
+            return $users_arr;
+        } else
+            return false;
+    }
+
     //update user
     public function update($firstName, $secondName, $phoneNumber, $email, $password)
     {
@@ -61,9 +93,7 @@ class User
             $stmt->bindValue(':userId', htmlspecialchars(strip_tags($this->userId, PDO::PARAM_INT)));
             //Execute query
             $stmt->execute();
-        }
-        else 
-        {
+        } else {
             $updateUserById = "UPDATE users SET `password` = :password, `firstName` = :firstName, `secondName` = :secondName, `email` = :email, `phoneNumber` = :phoneNumber WHERE `userId` =:userId";
             $stmt = $this->conn->prepare($updateUserById);
             $stmt->bindValue(':firstName', htmlspecialchars(strip_tags($firstName, PDO::PARAM_STR)));
